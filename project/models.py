@@ -16,6 +16,12 @@ class MonitorType(models.Model):
         else:
             return None
 
+    @classmethod
+    def create(self, name: str, parameters=None):
+        monitor_type = self(name=name, parameters=parameters)
+        monitor_type.save()
+        return monitor_type
+
     def serialize(self) -> dict:
         return {
             'id': self.id,
