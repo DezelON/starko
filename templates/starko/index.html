@@ -1,0 +1,32 @@
+{% include "starko/header.html" %}
+
+    <div id="table" class="p-3">
+        <b-input v-model="filter" type="search" id="filterInput" placeholder="Введите для поиска" class="w-auto mb-3"></b-input>
+        <template v-if="monitors.length>0">
+            <b-table outlined :items="monitors" :fields="fields" striped :filter="filter" selectable select-mode="single" small primary-key="a">
+                <template v-slot:cell(values)="data">
+                    <template v-if="data.item.monitor_type == 'video'">
+                        <b-embed type="video" aspect="4by3" controls>
+                            <source :src="'/static/media/starko/'+data.value" type="video/mp4">
+                        </b-embed>
+                    </template>
+                    <template v-else-if="data.item.monitor_type == 'slider'">
+                        <b-carousel id="carousel" :interval="data.item.parameters.interval * 1000" img-width="1024" img-height="480" controls indicators background="#ababab">
+                            <b-carousel-slide v-for="v in data.value" :img-src="'/static/media/starko/'+v"></b-carousel-slide>
+                        </b-carousel>
+                    </template>
+                    <template v-else>
+                        <b-img :src="'/static/media/starko/'+data.value" fluid></b-img>
+                    </template>
+                </template>
+                <template v-slot:cell(parameters)="data">
+                    <template v-for="val in Object.keys(data.value)">
+                        <p v-if="val == 'interval'">Интервал: ${data.value[val]} сек.</p>
+                        <!-- И так далее -->
+                    </template>
+                </template>
+            </b-table>
+        </template>
+    </div>
+
+{% include "starko/footer.html" %}
